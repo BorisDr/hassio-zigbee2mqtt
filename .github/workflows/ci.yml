@@ -16,11 +16,6 @@ jobs:
       run: |
         echo "ADDON_LIST=['zigbee2mqtt', 'zigbee2mqtt-edge']" >> $GITHUB_ENV
         echo "DOCKER_ARGS=--no-latest --test" >> $GITHUB_ENV
-    - name: "ARGS: zigbee2mqtt-edge" # Build of addon edge version
-      if: github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-      run: |
-        echo "ADDON_LIST=['zigbee2mqtt-edge']" >> $GITHUB_ENV
-        echo "DOCKER_ARGS=--no-cache" >> $GITHUB_ENV
     - name: "ARGS: zigbee2mqtt" # Build of addon release version
       if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
       run: |
@@ -47,7 +42,7 @@ jobs:
     - uses: actions/checkout@v3
     - name: Docker login
       if: (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')) && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-      run: echo ${{ secrets.DOCKER_KEY }} | docker login -u koenkk --password-stdin
+      run: echo ${{ secrets.DOCKER_KEY }} | docker login -u borisdr --password-stdin
     - name: Build
       run: |
         cp -R common/rootfs ${{ matrix.addon }}
